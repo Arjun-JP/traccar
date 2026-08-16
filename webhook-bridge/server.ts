@@ -11,7 +11,9 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABAS
 // If they didn't provide keys, we just log it for now
 const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
-const PORT = parseInt(process.env.PORT || '5112', 10);
+// Hardcode port 5112 because Railway's TCP Proxy is mapped specifically to this port.
+// Do not use process.env.PORT because Railway injects that for HTTP web traffic!
+const PORT = 5112;
 
 const server = net.createServer((socket) => {
     console.log(`\n[+] New connection established from ${socket.remoteAddress}:${socket.remotePort}`);
