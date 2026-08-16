@@ -14,7 +14,7 @@ const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 const PORT = parseInt(process.env.PORT || '5112', 10);
 
 const server = net.createServer((socket) => {
-    // console.log(`[+] New connection from ${socket.remoteAddress}:${socket.remotePort}`);
+    console.log(`\n[+] New connection established from ${socket.remoteAddress}:${socket.remotePort}`);
 
     socket.on('data', async (data) => {
         try {
@@ -116,7 +116,11 @@ const server = net.createServer((socket) => {
     });
 
     socket.on('error', (err) => {
-        // Ignore normal connection resets
+        console.error(`[-] Socket Error from ${socket.remoteAddress}:`, err.message);
+    });
+
+    socket.on('close', () => {
+        console.log(`[-] Connection closed by ${socket.remoteAddress}`);
     });
 });
 
