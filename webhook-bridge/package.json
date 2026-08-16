@@ -8,8 +8,8 @@
     "dev": "ts-node-dev server.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "dotenv": "^16.4.5",
+    "@supabase/supabase-js": "^2.112.3",
+    "dotenv": "^16.6.1",
     "fastify": "^4.28.1"
   },
   "devDependencies": {

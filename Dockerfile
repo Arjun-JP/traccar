@@ -1,4 +1,16 @@
-FROM traccar/traccar:latest
+FROM node:20-alpine
 
-# Copy our custom cloud configuration file into the container
-COPY setup/traccar-cloud.xml /opt/traccar/conf/traccar.xml
+# Set the working directory
+WORKDIR /app
+
+# Copy the webhook-bridge files
+COPY webhook-bridge/package*.json ./
+RUN npm install
+
+COPY webhook-bridge/ ./
+
+# Expose the TCP port
+EXPOSE 5112
+
+# Run the server
+CMD ["npx", "ts-node", "server.ts"]

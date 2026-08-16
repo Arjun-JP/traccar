@@ -1,89 +1,124 @@
-import Fastify from 'fastify';
+import net from 'net';
 import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
-// Load environment variables from .env file
 dotenv.config();
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Initialize Supabase Client
+const supabaseUrl = process.env.SUPABASE_URL || 'https://mdsqsnrratorpzflwwhq.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || ''; 
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables.");
-  process.exit(1);
-}
+// If they didn't provide keys, we just log it for now
+const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-const fastify = Fastify({ logger: true });
+const PORT = parseInt(process.env.PORT || '5112', 10);
 
-// Traccar webhook endpoint
-fastify.post('/api/traccar/webhook', async (request, reply) => {
-  try {
-    const payload = request.body as any;
+const server = net.createServer((socket) => {
+    // console.log(`[+] New connection from ${socket.remoteAddress}:${socket.remotePort}`);
 
-    if (!payload || !payload.position || !payload.device) {
-      reply.status(400).send({ error: "Invalid payload format. Expected { position, device }" });
-      return;
-    }
+    socket.on('data', async (data) => {
+        try {
+            const rawString = data.toString('ascii');
+            
+            // Send ACK back (Traccar sends a single 0x01 byte)
+            socket.write(Buffer.from([0x01]));
 
-    const { position, device } = payload;
-    const uniqueId = device.uniqueId;
-    const { latitude, longitude, altitude, speed, course, accuracy, fixTime, attributes } = position;
+            // Regex to parse the Cordon / Atlanta Protocol
+            // Example: ATL862211072207855,$GPRMC,133409,A,1232.9652,N,07757.4297,E,0.0,0,180725,,,*2A,#01111011000000,0.00,-70.00,,14940.32,33,4.2...
+            const gprmcRegex = /ATL.*?(\d{15}),\$GPRMC,(\d{2})(\d{2})(\d{2})(?:\.\d+)?,([AV]),(\d+?)(\d{2}\.\d+),([NS]),(\d+?)(\d{2}\.\d+),([EW]),(\d+\.?\d*)?,(\d+\.?\d*)?,(\d{2})(\d{2})(\d{2})(.*)/;
+            const match = rawString.match(gprmcRegex);
 
-    // 1. Upsert device to ensure it exists and update its status
-    const { error: deviceError } = await supabase
-      .from('gps_devices')
-      .upsert({
-        unique_id: uniqueId,
-        name: device.name || null,
-        model: device.model || null,
-        status: 'online',
-        last_online: new Date().toISOString()
-      }, { onConflict: 'unique_id' });
+            if (!match) {
+                console.log(`[-] Could not parse data: ${rawString.substring(0, 50)}...`);
+                return;
+            }
 
-    if (deviceError) {
-      fastify.log.error({ err: deviceError }, "Error upserting device");
-      reply.status(500).send({ error: "Failed to upsert device" });
-      return;
-    }
+            const imei = match[1];
+            const hh = match[2];
+            const mm = match[3];
+            const ss = match[4];
+            const validity = match[5];
+            const latDeg = parseFloat(match[6]);
+            const latMin = parseFloat(match[7]);
+            const latHem = match[8];
+            const lonDeg = parseFloat(match[9]);
+            const lonMin = parseFloat(match[10]);
+            const lonHem = match[11];
+            const speedKnots = parseFloat(match[12] || '0');
+            const course = parseFloat(match[13] || '0');
+            const day = match[14];
+            const month = match[15];
+            const year = match[16];
+            const remainder = match[17];
 
-    // 2. Insert the new position
-    const { error: positionError } = await supabase
-      .from('gps_positions')
-      .insert({
-        device_unique_id: uniqueId,
-        latitude,
-        longitude,
-        altitude,
-        speed,
-        course,
-        accuracy,
-        fix_time: fixTime,
-        attributes
-      });
+            // Only process valid fixes
+            if (validity !== 'A') {
+                console.log(`[!] Invalid GPS fix for ${imei}`);
+                return;
+            }
 
-    if (positionError) {
-      fastify.log.error({ err: positionError }, "Error inserting position");
-      reply.status(500).send({ error: "Failed to insert position" });
-      return;
-    }
+            // Convert to Decimal Degrees
+            let latitude = latDeg + (latMin / 60.0);
+            if (latHem === 'S') latitude = -latitude;
 
-    reply.status(200).send({ success: true });
-  } catch (error) {
-    fastify.log.error(error, "Webhook processing error");
-    reply.status(500).send({ error: "Internal server error" });
-  }
+            let longitude = lonDeg + (lonMin / 60.0);
+            if (lonHem === 'W') longitude = -longitude;
+
+            const speedKmh = speedKnots * 1.852;
+
+            // Parse Date (Format: 20YY-MM-DDTHH:MM:SSZ)
+            const timestamp = new Date(`20${year}-${month}-${day}T${hh}:${mm}:${ss}Z`).toISOString();
+
+            // Extract IO, Battery, etc from remainder
+            let ignition_status = false;
+            let battery_voltage = null;
+
+            const ioMatch = remainder.match(/#([01]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)/);
+            if (ioMatch) {
+                const ioField = ioMatch[1];
+                ignition_status = ioField.charAt(0) === '1'; // 0th bit is Ignition
+                
+                // Usually Battery is the 7th field after # in Atlanta protocol (or we can extract it if present)
+                if (ioMatch[7]) {
+                    battery_voltage = parseFloat(ioMatch[7]);
+                }
+            }
+
+            const payload = {
+                imei,
+                timestamp,
+                latitude,
+                longitude,
+                speed_kmh: speedKmh,
+                course,
+                ignition_status,
+                battery_voltage,
+                raw_data: rawString.substring(0, 255) // Keep a snippet for debugging
+            };
+
+            console.log(`[+] Valid Location: ${imei} | Lat: ${latitude} | Lon: ${longitude} | Speed: ${speedKmh}`);
+
+            if (supabase) {
+                const { error } = await supabase.from('gps_data').insert([payload]);
+                if (error) {
+                    console.error(`[-] Supabase Insert Error:`, error);
+                } else {
+                    console.log(`[+] Saved to Supabase!`);
+                }
+            } else {
+                console.log(`[!] Supabase not configured. Set SUPABASE_URL and SUPABASE_KEY in Railway!`);
+            }
+
+        } catch (err) {
+            console.error(`[-] Error processing packet:`, err);
+        }
+    });
+
+    socket.on('error', (err) => {
+        // Ignore normal connection resets
+    });
 });
 
-const start = async () => {
-  try {
-    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-    await fastify.listen({ port: port, host: '0.0.0.0' });
-    fastify.log.info(`Server listening on port ${port}`);
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-};
-
-start();
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Custom GPS Server listening on port ${PORT}`);
+});
