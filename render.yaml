@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: traccar-webhook-bridge
+    env: node
+    rootDir: webhook-bridge
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false

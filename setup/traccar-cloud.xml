@@ -2,21 +2,17 @@
 <!DOCTYPE properties SYSTEM 'http://java.sun.com/dtd/properties.dtd'>
 <properties>
 
-    <!-- Documentation: https://www.traccar.org/configuration-file/ -->
-
-    <entry key='database.driver'>org.h2.Driver</entry>
-    <entry key='database.url'>jdbc:h2:./data/database</entry>
-    <entry key='database.user'>sa</entry>
-    <entry key='database.password' />
+    <!-- Cloud PostgreSQL Database -->
+    <entry key='database.driver'>org.postgresql.Driver</entry>
+    <entry key='database.url'>${DATABASE_URL}</entry>
+    <entry key='database.user'>${DATABASE_USER}</entry>
+    <entry key='database.password'>${DATABASE_PASSWORD}</entry>
 
     <!-- Webhook Bridge Forwarder -->
     <entry key='event.forward.enable'>true</entry>
     <entry key='forward.enable'>true</entry>
-    <entry key='forward.url'>http://localhost:3000/api/traccar/webhook</entry>
+    <entry key='forward.url'>${WEBHOOK_URL}</entry>
     <entry key='forward.json'>true</entry>
-
-    <!-- Web Dashboard Path -->
-    <entry key='web.path'>./traccar-web/build</entry>
 
     <!-- Enable GPS Tracker Protocols -->
     <entry key='watch.port'>5112</entry>

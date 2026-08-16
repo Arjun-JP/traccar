@@ -1,0 +1,407 @@
+2026-08-16 14:03:42  INFO: Operating system name: Mac OS X version: 26.4 architecture: aarch64
+2026-08-16 14:03:42  INFO: Java runtime name: OpenJDK 64-Bit Server VM vendor: Homebrew version: 21.0.12
+2026-08-16 14:03:42  INFO: Memory limit heap: 2048mb non-heap: 0mb
+2026-08-16 14:03:42  INFO: Character encoding: UTF-8
+2026-08-16 14:03:42  INFO: Version: 6.14.5
+2026-08-16 14:03:42  INFO: Starting server...
+2026-08-16 14:03:42  INFO: HikariPool-1 - Starting...
+2026-08-16 14:03:42  INFO: HikariPool-1 - Added connection conn0: url=jdbc:h2:./data/database user=SA
+2026-08-16 14:03:42  INFO: HikariPool-1 - Start completed.
+2026-08-16 14:03:42  INFO: Set default schema name to PUBLIC
+2026-08-16 14:03:42  INFO: Creating snapshot
+2026-08-16 14:03:43  INFO: Successfully acquired change log lock
+2026-08-16 14:03:43  INFO: Creating database changelog table with name: PUBLIC.DATABASECHANGELOG
+2026-08-16 14:03:43  INFO: Clearing database change log checksums for database h2
+2026-08-16 14:03:43  INFO: Successfully released change log lock
+2026-08-16 14:03:43  INFO: Command execution complete
+2026-08-16 14:03:43  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:03:43  INFO: Successfully acquired change log lock
+2026-08-16 14:03:43  INFO: Using deploymentId: 6869222733
+2026-08-16 14:03:43  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:03:43  INFO: Table tc_attributes created
+2026-08-16 14:03:43  INFO: Table tc_calendars created
+2026-08-16 14:03:43  INFO: Table tc_commands created
+2026-08-16 14:03:43  INFO: Table tc_device_attribute created
+2026-08-16 14:03:43  INFO: Table tc_device_command created
+2026-08-16 14:03:43  INFO: Table tc_device_driver created
+2026-08-16 14:03:43  INFO: Table tc_device_geofence created
+2026-08-16 14:03:43  INFO: Table tc_device_maintenance created
+2026-08-16 14:03:43  INFO: Table tc_device_notification created
+2026-08-16 14:03:43  INFO: Table tc_devices created
+2026-08-16 14:03:43  INFO: Table tc_drivers created
+2026-08-16 14:03:43  INFO: Table tc_events created
+2026-08-16 14:03:43  INFO: Table tc_geofences created
+2026-08-16 14:03:43  INFO: Table tc_group_attribute created
+2026-08-16 14:03:43  INFO: Table tc_group_command created
+2026-08-16 14:03:43  INFO: Table tc_group_driver created
+2026-08-16 14:03:43  INFO: Table tc_group_geofence created
+2026-08-16 14:03:43  INFO: Table tc_group_maintenance created
+2026-08-16 14:03:43  INFO: Table tc_group_notification created
+2026-08-16 14:03:43  INFO: Table tc_groups created
+2026-08-16 14:03:43  INFO: Table tc_maintenances created
+2026-08-16 14:03:43  INFO: Table tc_notifications created
+2026-08-16 14:03:43  INFO: Table tc_positions created
+2026-08-16 14:03:43  INFO: Table tc_servers created
+2026-08-16 14:03:43  INFO: Table tc_statistics created
+2026-08-16 14:03:43  INFO: Table tc_user_attribute created
+2026-08-16 14:03:43  INFO: Table tc_user_calendar created
+2026-08-16 14:03:43  INFO: Table tc_user_command created
+2026-08-16 14:03:43  INFO: Table tc_user_device created
+2026-08-16 14:03:43  INFO: Table tc_user_driver created
+2026-08-16 14:03:43  INFO: Table tc_user_geofence created
+2026-08-16 14:03:43  INFO: Table tc_user_group created
+2026-08-16 14:03:43  INFO: Table tc_user_maintenance created
+2026-08-16 14:03:43  INFO: Table tc_user_notification created
+2026-08-16 14:03:43  INFO: Table tc_user_user created
+2026-08-16 14:03:43  INFO: Table tc_users created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_command (commandid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_command (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_driver (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_driver (driverid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_geofence (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_geofence (geofenceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_maintenance (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_maintenance (maintenanceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_notification (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_notification (notificationid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_devices (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_events (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_geofences (calendarid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_attribute (attributeid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_attribute (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_command (commandid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_command (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_driver (driverid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_driver (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_geofence (geofenceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_geofence (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_maintenance (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_maintenance (maintenanceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_notification (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_notification (notificationid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_notifications (calendarid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_positions (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_attribute (attributeid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_attribute (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_calendar (calendarid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_calendar (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_command (commandid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_command (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_attribute (attributeid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_attribute (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_device (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_device (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_driver (driverid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_driver (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_geofence (geofenceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_geofence (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_group (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_group (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_maintenance (maintenanceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_maintenance (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_notification (notificationid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_notification (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_user (userid)
+2026-08-16 14:03:43  INFO: New row inserted into tc_servers
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.0-clean::changelog-4.0-clean::author ran successfully in 84ms
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_groups (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_user (manageduserid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.0-clean::changelog-4.0-clean-common::author ran successfully in 2ms
+2026-08-16 14:03:43  INFO: Marking ChangeSet: "changelog-4.1::changelog-4.1-mssql::author" as ran despite precondition failure due to onFail='MARK_RAN': 
+          changelog-master.xml : DBMS Precondition failed: expected mssql, got h2
+
+2026-08-16 14:03:43  INFO: Creating snapshot
+2026-08-16 14:03:43  INFO: Index user_device_user_id created
+2026-08-16 14:03:43  INFO: Index position_deviceid_fixtime created
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.7::changelog-4.7::author ran successfully in 12ms
+2026-08-16 14:03:43  INFO: Index event_deviceid_servertime created
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.9::changelog-4.9::author ran successfully in 1ms
+2026-08-16 14:03:43  INFO: Columns protocols(VARCHAR(4096)) added to tc_statistics
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.10::changelog-4.10::author ran successfully in 5ms
+2026-08-16 14:03:43  INFO: Columns announcement(VARCHAR(4000)) added to tc_servers
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.11::changelog-4.11::author ran successfully in 2ms
+2026-08-16 14:03:43  INFO: Column tc_events.servertime renamed to eventtime
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.13::changelog-4.13::author ran successfully in 1ms
+2026-08-16 14:03:43  INFO: Table tc_orders created
+2026-08-16 14:03:43  INFO: Table tc_user_order created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_order (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_order (orderid)
+2026-08-16 14:03:43  INFO: Table tc_group_order created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_order (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_order (orderid)
+2026-08-16 14:03:43  INFO: Table tc_device_order created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_order (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_order (orderid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-4.15::changelog-4.15::author ran successfully in 9ms
+2026-08-16 14:03:43  INFO: Columns disablereports(BOOLEAN) added to tc_servers
+2026-08-16 14:03:43  INFO: Columns disablereports(BOOLEAN) added to tc_users
+2026-08-16 14:03:43  INFO: Column tc_orders.toAddress renamed to toaddresstmp
+2026-08-16 14:03:43  INFO: Column tc_orders.fromAddress renamed to fromaddresstmp
+2026-08-16 14:03:43  INFO: Column tc_orders.toaddresstmp renamed to toaddress
+2026-08-16 14:03:43  INFO: Column tc_orders.fromaddresstmp renamed to fromaddress
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.0::changelog-5.0::author ran successfully in 11ms
+2026-08-16 14:03:43  INFO: Index idx_drivers_uniqueid created
+2026-08-16 14:03:43  INFO: Index idx_devices_uniqueid created
+2026-08-16 14:03:43  INFO: Index idx_users_email created
+2026-08-16 14:03:43  INFO: Index idx_users_login created
+2026-08-16 14:03:43  INFO: Index idx_users_token created
+2026-08-16 14:03:43  INFO: Columns overlayurl(VARCHAR(512)) added to tc_servers
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.1::changelog-5.1::author ran successfully in 4ms
+2026-08-16 14:03:43  INFO: Columns status(CHAR(8)) added to tc_devices
+2026-08-16 14:03:43  INFO: Columns geofenceids(VARCHAR(128)) added to tc_devices
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.2::changelog-5.2::author ran successfully in 8ms
+2026-08-16 14:03:43  INFO: Columns fixedemail(BOOLEAN) added to tc_servers
+2026-08-16 14:03:43  INFO: Columns fixedemail(BOOLEAN) added to tc_users
+2026-08-16 14:03:43  INFO: Columns expirationtime(TIMESTAMP) added to tc_devices
+2026-08-16 14:03:43  INFO: Table tc_keystore created
+2026-08-16 14:03:43  INFO: Index idx_users_token dropped from table tc_users
+2026-08-16 14:03:43  INFO: Column tc_users.token dropped
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.3::changelog-5.3::author ran successfully in 17ms
+2026-08-16 14:03:43  INFO: Columns motionstate(BOOLEAN),motiontime(TIMESTAMP),motiondistance(DOUBLE),overspeedstate(BOOLEAN),overspeedtime(TIMESTAMP),overspeedgeofenceid(INT) added to tc_devices
+2026-08-16 14:03:43  INFO: Table tc_commands_queue created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_commands_queue (deviceid)
+2026-08-16 14:03:43  INFO: Index idx_commands_queue_deviceid created
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.4::changelog-5.4::author ran successfully in 19ms
+2026-08-16 14:03:43  INFO: Column tc_commands_queue.description dropped
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.5::changelog-5.5::author ran successfully in 3ms
+2026-08-16 14:03:43  INFO: Columns motionstreak(BOOLEAN) added to tc_devices
+2026-08-16 14:03:43  INFO: Table tc_reports created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_reports (calendarid)
+2026-08-16 14:03:43  INFO: Table tc_user_report created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_report (userid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_user_report (reportid)
+2026-08-16 14:03:43  INFO: Table tc_group_report created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_report (groupid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_group_report (reportid)
+2026-08-16 14:03:43  INFO: Table tc_device_report created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_report (deviceid)
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_report (reportid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.6::changelog-5.6::author ran successfully in 11ms
+2026-08-16 14:03:43  INFO: Columns commandid(INT) added to tc_notifications
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_notifications (commandid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.7::changelog-5.7::author ran successfully in 3ms
+2026-08-16 14:03:43  INFO: Column tc_devices.geofenceids dropped
+2026-08-16 14:03:43  INFO: Columns geofenceids(VARCHAR(128)) added to tc_positions
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.8::changelog-5.8::author ran successfully in 5ms
+2026-08-16 14:03:43  INFO: Columns calendarid(INT) added to tc_devices
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_devices (calendarid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.9::changelog-5.9::author ran successfully in 3ms
+2026-08-16 14:03:43  INFO: Columns totpkey(VARCHAR(64)) added to tc_users
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.10::changelog-5.10::author ran successfully in 3ms
+2026-08-16 14:03:43  INFO: Columns temporary(BOOLEAN) added to tc_users
+2026-08-16 14:03:43  INFO: ChangeSet changelog-5.11::changelog-5.11::author ran successfully in 3ms
+2026-08-16 14:03:43  INFO: Column tc_servers.twelvehourformat dropped
+2026-08-16 14:03:43  INFO: Column tc_users.twelvehourformat dropped
+2026-08-16 14:03:43  INFO: Columns priority(INT) added to tc_attributes
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.2::changelog-6.2::author ran successfully in 7ms
+2026-08-16 14:03:43  INFO: Creating snapshot
+2026-08-16 14:03:43  INFO: Marking ChangeSet: "changelog-6.3::changelog-6.3-old::author" as ran despite precondition failure due to onFail='MARK_RAN': 
+          changelog-master.xml : Foreign Key PUBLIC.fk_event_deviceid does not exist
+
+2026-08-16 14:03:43  INFO: Foreign key fk_events_deviceid dropped
+2026-08-16 14:03:43  INFO: Foreign key fk_positions_deviceid dropped
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.3::changelog-6.3-new::author ran successfully in 4ms
+2026-08-16 14:03:43  INFO: Columns description(VARCHAR(4000)) added to tc_notifications
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.6::changelog-6.6::author ran successfully in 2ms
+2026-08-16 14:03:43  INFO: Creating snapshot
+2026-08-16 14:03:43  INFO: Table tc_actions created
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.7.0::changelog-6.7.0::author ran successfully in 11ms
+2026-08-16 14:03:43  INFO: Marking ChangeSet: "changelog-6.8.0::changelog-6.8.0-timescale::author" as ran despite precondition failure due to onFail='MARK_RAN': 
+          changelog-master.xml : DBMS Precondition failed: expected postgresql, got h2
+
+2026-08-16 14:03:43  INFO: Columns motionpositionid(INT) added to tc_devices
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.9.0::changelog-6.9.0::author ran successfully in 3ms
+2026-08-16 14:03:43  INFO: Marking ChangeSet: "changelog-6.11.0::changelog-6.11.0-timescale::author" as ran despite precondition failure due to onFail='MARK_RAN': 
+          changelog-master.xml : DBMS Precondition failed: expected postgresql, got h2
+
+2026-08-16 14:03:43  INFO: Creating snapshot
+2026-08-16 14:03:43  INFO: Index tc_actions_actiontime_idx created
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.11.0::changelog-6.11.0-other-new::author ran successfully in 2ms
+2026-08-16 14:03:43  INFO: Table tc_revoked_tokens created
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.11.0::changelog-6.11.0::author ran successfully in 1ms
+2026-08-16 14:03:43  INFO: Columns motionlatitude(DOUBLE),motionlongitude(DOUBLE) added to tc_devices
+2026-08-16 14:03:43  INFO: Table tc_device_device created
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_device (deviceid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.13.0::changelog-6.13.0::author ran successfully in 11ms
+2026-08-16 14:03:43  INFO: Creating snapshot
+2026-08-16 14:03:43  INFO: Foreign key constraint added to tc_device_device (linkeddeviceid)
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.13.0::changelog-6.13.0-fk-linkeddeviceid::author ran successfully in 4ms
+2026-08-16 14:03:43  INFO: tc_devices.positionid datatype was changed to BIGINT
+2026-08-16 14:03:43  INFO: tc_devices.motionpositionid datatype was changed to BIGINT
+2026-08-16 14:03:43  INFO: tc_devices.overspeedgeofenceid datatype was changed to BIGINT
+2026-08-16 14:03:43  INFO: tc_actions.userid datatype was changed to BIGINT
+2026-08-16 14:03:43  INFO: tc_actions.objectid datatype was changed to BIGINT
+2026-08-16 14:03:43  INFO: ChangeSet changelog-6.15.0::changelog-6.15.0::author ran successfully in 12ms
+2026-08-16 14:03:43  INFO: UPDATE SUMMARY
+2026-08-16 14:03:43  INFO: Run:                         34
+2026-08-16 14:03:43  INFO: Previously run:               0
+2026-08-16 14:03:43  INFO: Filtered out:                 1
+2026-08-16 14:03:43  INFO: -------------------------------
+2026-08-16 14:03:43  INFO: Total change sets:           35
+2026-08-16 14:03:43  INFO: FILTERED CHANGE SETS SUMMARY
+2026-08-16 14:03:43  INFO: DBMS mismatch:                1
+2026-08-16 14:03:43  INFO: Update summary generated
+2026-08-16 14:03:43  INFO: Update command completed successfully.
+2026-08-16 14:03:43  INFO: Successfully released change log lock
+2026-08-16 14:03:43  INFO: Command execution complete
+2026-08-16 14:03:44 ERROR: Main method error - /Users/arjun/Desktop/safai_sethu/traccar/web - NoSuchFileException (... < WebServer:139 < *:102 < MainModule:220 < <gener:-1 < *:-1 < ... < Main:124 < ...)
+2026-08-16 14:36:05  INFO: Operating system name: Mac OS X version: 26.4 architecture: aarch64
+2026-08-16 14:36:05  INFO: Java runtime name: OpenJDK 64-Bit Server VM vendor: Homebrew version: 21.0.12
+2026-08-16 14:36:05  INFO: Memory limit heap: 2048mb non-heap: 0mb
+2026-08-16 14:36:05  INFO: Character encoding: UTF-8
+2026-08-16 14:36:05  INFO: Version: 6.14.5
+2026-08-16 14:36:05  INFO: Starting server...
+2026-08-16 14:36:05  INFO: HikariPool-1 - Starting...
+2026-08-16 14:36:06  INFO: HikariPool-1 - Added connection conn0: url=jdbc:h2:./data/database user=SA
+2026-08-16 14:36:06  INFO: HikariPool-1 - Start completed.
+2026-08-16 14:36:06  INFO: Set default schema name to PUBLIC
+2026-08-16 14:36:06  INFO: Successfully acquired change log lock
+2026-08-16 14:36:06  INFO: Clearing database change log checksums for database h2
+2026-08-16 14:36:06  INFO: Successfully released change log lock
+2026-08-16 14:36:06  INFO: Command execution complete
+2026-08-16 14:36:06  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:36:06  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:36:06  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:36:06  INFO: UPDATE SUMMARY
+2026-08-16 14:36:06  INFO: Run:                          0
+2026-08-16 14:36:06  INFO: Previously run:              34
+2026-08-16 14:36:06  INFO: Filtered out:                 1
+2026-08-16 14:36:06  INFO: -------------------------------
+2026-08-16 14:36:06  INFO: Total change sets:           35
+2026-08-16 14:36:06  INFO: FILTERED CHANGE SETS SUMMARY
+2026-08-16 14:36:06  INFO: DBMS mismatch:                1
+2026-08-16 14:36:06  INFO: Update summary generated
+2026-08-16 14:36:06  INFO: Command execution complete
+2026-08-16 14:36:07  INFO: jetty-12.1.8; built: 2026-04-01T01:09:18.991Z; git: c9cdc9aaa434a3665b8a53b4d1cc3684992da649; jvm 21.0.12
+2026-08-16 14:36:07  INFO: Session workerName=node0
+2026-08-16 14:36:07  INFO: Started oeje10s.ServletContextHandler@4dac40b{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@2c54c497{STARTED}}
+2026-08-16 14:36:07  INFO: Started oeje10s.ServletContextHandler@4dac40b{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@2c54c497{STARTED}}
+2026-08-16 14:36:07  INFO: Started oejs.ServerConnector@4c3d72fd{HTTP/1.1, (http/1.1)}{0.0.0.0:8082}
+2026-08-16 14:36:07  INFO: Started oejs.Server@259c6ab8{STARTING}[12.1.8,sto=0] @373ms
+2026-08-16 14:55:23  INFO: Operating system name: Mac OS X version: 26.4 architecture: aarch64
+2026-08-16 14:55:23  INFO: Java runtime name: OpenJDK 64-Bit Server VM vendor: Homebrew version: 21.0.12
+2026-08-16 14:55:23  INFO: Memory limit heap: 2048mb non-heap: 0mb
+2026-08-16 14:55:23  INFO: Character encoding: UTF-8
+2026-08-16 14:55:23  INFO: Version: 6.14.5
+2026-08-16 14:55:23  INFO: Starting server...
+2026-08-16 14:55:23  INFO: HikariPool-1 - Starting...
+2026-08-16 14:55:23  INFO: HikariPool-1 - Added connection conn0: url=jdbc:h2:./data/database user=SA
+2026-08-16 14:55:23  INFO: HikariPool-1 - Start completed.
+2026-08-16 14:55:23  INFO: Set default schema name to PUBLIC
+2026-08-16 14:55:23  INFO: Successfully acquired change log lock
+2026-08-16 14:55:23  INFO: Clearing database change log checksums for database h2
+2026-08-16 14:55:23  INFO: Successfully released change log lock
+2026-08-16 14:55:23  INFO: Command execution complete
+2026-08-16 14:55:24  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:55:24  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:55:24  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 14:55:24  INFO: UPDATE SUMMARY
+2026-08-16 14:55:24  INFO: Run:                          0
+2026-08-16 14:55:24  INFO: Previously run:              34
+2026-08-16 14:55:24  INFO: Filtered out:                 1
+2026-08-16 14:55:24  INFO: -------------------------------
+2026-08-16 14:55:24  INFO: Total change sets:           35
+2026-08-16 14:55:24  INFO: FILTERED CHANGE SETS SUMMARY
+2026-08-16 14:55:24  INFO: DBMS mismatch:                1
+2026-08-16 14:55:24  INFO: Update summary generated
+2026-08-16 14:55:24  INFO: Command execution complete
+2026-08-16 14:55:25  INFO: jetty-12.1.8; built: 2026-04-01T01:09:18.991Z; git: c9cdc9aaa434a3665b8a53b4d1cc3684992da649; jvm 21.0.12
+2026-08-16 14:55:25  INFO: Session workerName=node0
+2026-08-16 14:55:25  INFO: Started oeje10s.ServletContextHandler@3ee258{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@4f676900{STARTED}}
+2026-08-16 14:55:25  INFO: Started oeje10s.ServletContextHandler@3ee258{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@4f676900{STARTED}}
+2026-08-16 14:55:25  INFO: Started oejs.ServerConnector@73baf7f0{HTTP/1.1, (http/1.1)}{0.0.0.0:8082}
+2026-08-16 14:55:25  INFO: Started oejs.Server@446dacf9{STARTING}[12.1.8,sto=0] @382ms
+2026-08-16 14:56:01  INFO: [T69d62cd0] connected
+2026-08-16 14:56:01  INFO: [T163ddc28] connected
+2026-08-16 14:56:01  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:01  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:09  INFO: [T21c7abd3] connected
+2026-08-16 14:56:09  INFO: [T21c7abd3: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8\r\nSec-GPC: 1\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-GB,en;q=0.9\r\n\r\n
+2026-08-16 14:56:09  INFO: [T21c7abd3: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:33  INFO: [T21c7abd3: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8\r\nSec-GPC: 1\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-GB,en;q=0.9\r\n\r\n
+2026-08-16 14:56:33  INFO: [T21c7abd3: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:51  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:51  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:53  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:54  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:54  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:56:54  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:56:54  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:57:39  INFO: [T163ddc28: osmand < 192.168.0.3] GET / HTTP/1.1\r\nHost: 192.168.0.3:5055\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n
+2026-08-16 14:57:39  INFO: [T5d6555be] connected
+2026-08-16 14:57:39  INFO: [T163ddc28: osmand > 192.168.0.3] HTTP/1.1 400 Bad Request\r\ncontent-length: 0\r\n\r\n
+2026-08-16 14:57:39  INFO: [T69d62cd0] disconnected
+2026-08-16 16:38:14  INFO: Operating system name: Mac OS X version: 26.4 architecture: aarch64
+2026-08-16 16:38:14  INFO: Java runtime name: OpenJDK 64-Bit Server VM vendor: Homebrew version: 21.0.12
+2026-08-16 16:38:14  INFO: Memory limit heap: 2048mb non-heap: 0mb
+2026-08-16 16:38:14  INFO: Character encoding: UTF-8
+2026-08-16 16:38:14  INFO: Version: 6.14.5
+2026-08-16 16:38:14  INFO: Starting server...
+2026-08-16 16:38:14  INFO: HikariPool-1 - Starting...
+2026-08-16 16:38:14  INFO: HikariPool-1 - Added connection conn0: url=jdbc:h2:./data/database user=SA
+2026-08-16 16:38:14  INFO: HikariPool-1 - Start completed.
+2026-08-16 16:38:14  INFO: Set default schema name to PUBLIC
+2026-08-16 16:38:14  INFO: Successfully acquired change log lock
+2026-08-16 16:38:14  INFO: Clearing database change log checksums for database h2
+2026-08-16 16:38:14  INFO: Successfully released change log lock
+2026-08-16 16:38:14  INFO: Command execution complete
+2026-08-16 16:38:15  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 16:38:15  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 16:38:15  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 16:38:15  INFO: UPDATE SUMMARY
+2026-08-16 16:38:15  INFO: Run:                          0
+2026-08-16 16:38:15  INFO: Previously run:              34
+2026-08-16 16:38:15  INFO: Filtered out:                 1
+2026-08-16 16:38:15  INFO: -------------------------------
+2026-08-16 16:38:15  INFO: Total change sets:           35
+2026-08-16 16:38:15  INFO: FILTERED CHANGE SETS SUMMARY
+2026-08-16 16:38:15  INFO: DBMS mismatch:                1
+2026-08-16 16:38:15  INFO: Update summary generated
+2026-08-16 16:38:15  INFO: Command execution complete
+2026-08-16 16:38:16  INFO: jetty-12.1.8; built: 2026-04-01T01:09:18.991Z; git: c9cdc9aaa434a3665b8a53b4d1cc3684992da649; jvm 21.0.12
+2026-08-16 16:38:16  INFO: Session workerName=node0
+2026-08-16 16:38:16  INFO: Started oeje10s.ServletContextHandler@3ee258{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@4f676900{STARTED}}
+2026-08-16 16:38:16  INFO: Started oeje10s.ServletContextHandler@3ee258{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@4f676900{STARTED}}
+2026-08-16 16:38:16  INFO: Started oejs.ServerConnector@7544e3f2{HTTP/1.1, (http/1.1)}{0.0.0.0:8082}
+2026-08-16 16:38:16  INFO: Started oejs.Server@73baf7f0{STARTING}[12.1.8,sto=0] @349ms
+2026-08-16 16:47:02  INFO: Operating system name: Mac OS X version: 26.4 architecture: aarch64
+2026-08-16 16:47:02  INFO: Java runtime name: OpenJDK 64-Bit Server VM vendor: Homebrew version: 21.0.12
+2026-08-16 16:47:02  INFO: Memory limit heap: 2048mb non-heap: 0mb
+2026-08-16 16:47:02  INFO: Character encoding: UTF-8
+2026-08-16 16:47:02  INFO: Version: 6.14.5
+2026-08-16 16:47:02  INFO: Starting server...
+2026-08-16 16:47:02  INFO: HikariPool-1 - Starting...
+2026-08-16 16:47:02  INFO: HikariPool-1 - Added connection conn0: url=jdbc:h2:./data/database user=SA
+2026-08-16 16:47:02  INFO: HikariPool-1 - Start completed.
+2026-08-16 16:47:03  INFO: Set default schema name to PUBLIC
+2026-08-16 16:47:03  INFO: Successfully acquired change log lock
+2026-08-16 16:47:03  INFO: Clearing database change log checksums for database h2
+2026-08-16 16:47:03  INFO: Successfully released change log lock
+2026-08-16 16:47:03  INFO: Command execution complete
+2026-08-16 16:47:03  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 16:47:03  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 16:47:03  INFO: Reading from PUBLIC.DATABASECHANGELOG
+2026-08-16 16:47:03  INFO: UPDATE SUMMARY
+2026-08-16 16:47:03  INFO: Run:                          0
+2026-08-16 16:47:03  INFO: Previously run:              34
+2026-08-16 16:47:03  INFO: Filtered out:                 1
+2026-08-16 16:47:03  INFO: -------------------------------
+2026-08-16 16:47:03  INFO: Total change sets:           35
+2026-08-16 16:47:03  INFO: FILTERED CHANGE SETS SUMMARY
+2026-08-16 16:47:03  INFO: DBMS mismatch:                1
+2026-08-16 16:47:03  INFO: Update summary generated
+2026-08-16 16:47:03  INFO: Command execution complete
+2026-08-16 16:47:04  WARN: Port 5112 disabled due to conflict - Address already in use - BindException (...)
+2026-08-16 16:47:04  INFO: jetty-12.1.8; built: 2026-04-01T01:09:18.991Z; git: c9cdc9aaa434a3665b8a53b4d1cc3684992da649; jvm 21.0.12
+2026-08-16 16:47:04  INFO: Session workerName=node0
+2026-08-16 16:47:04  INFO: Started oeje10s.ServletContextHandler@4f676900{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@73a49597{STARTED}}
+2026-08-16 16:47:04  INFO: Started oeje10s.ServletContextHandler@4f676900{ROOT,/,b=file:///Users/arjun/Desktop/safai_sethu/traccar/traccar-web/build/,a=AVAILABLE,h=oeje10s.SessionHandler@73a49597{STARTED}}
+2026-08-16 16:47:04  INFO: Started oejs.ServerConnector@446dacf9{HTTP/1.1, (http/1.1)}{0.0.0.0:8082}
+2026-08-16 16:47:04  INFO: Started oejs.Server@13018f00{STARTING}[12.1.8,sto=0] @356ms
