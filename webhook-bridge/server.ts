@@ -19,6 +19,7 @@ const server = net.createServer((socket) => {
     socket.on('data', async (data) => {
         try {
             const rawString = data.toString('ascii');
+            console.log(`\n[INCOMING RAW DATA] --> ${rawString.trim()}`);
             
             // Send ACK back (Traccar sends a single 0x01 byte)
             socket.write(Buffer.from([0x01]));
