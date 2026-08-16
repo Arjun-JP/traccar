@@ -20,4 +20,7 @@
     <entry key='gt06.port'>5023</entry>
     <entry key='h02.port'>5013</entry>
 
+    <!-- Web Dashboard Path (Required for Docker) -->
+    <entry key='web.path'>./web</entry>
+
 </properties>
