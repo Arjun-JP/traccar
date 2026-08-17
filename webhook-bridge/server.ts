@@ -17,6 +17,52 @@ const supabaseUrl = process.env.SUPABASE_URL || 'https://mdsqsnrratorpzflwwhq.su
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || ''; 
 const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
+// ==========================================
+// MEMORY QUEUE FOR BATCHING
+// ==========================================
+let batchQueue: any[] = [];
+
+// This loop runs every 2 seconds to flush data to Supabase
+setInterval(async () => {
+    if (batchQueue.length === 0 || !supabase) return;
+
+    // Grab everything currently in the queue and clear it
+    const recordsToInsert = [...batchQueue];
+    batchQueue = [];
+
+    console.log(`\n[BATCH FLUSH] Sending ${recordsToInsert.length} records to Supabase...`);
+
+    try {
+        // 1. Bulk Insert ALL historical records to `gps_data`
+        const { error: insertErr } = await supabase.from('gps_data').insert(recordsToInsert);
+        if (insertErr) {
+            console.error(`[CRITICAL] Bulk Insert Failed:`, insertErr.message);
+        } else {
+            console.log(`[+] Bulk Insert Success: ${recordsToInsert.length} rows`);
+        }
+
+        // 2. Extract only the LATEST record for each IMEI for the `gps_latest` map table
+        const latestRecordsMap = new Map();
+        for (const record of recordsToInsert) {
+            // Because array is chronological, newer records will overwrite older ones in this Map
+            latestRecordsMap.set(record.imei, record);
+        }
+        const latestRecordsArray = Array.from(latestRecordsMap.values());
+
+        // 3. Bulk Upsert into `gps_latest`
+        const { error: upsertErr } = await supabase.from('gps_latest').upsert(latestRecordsArray, { onConflict: 'imei' });
+        if (upsertErr) {
+            console.error(`[CRITICAL] Bulk Upsert Failed:`, upsertErr.message);
+        } else {
+            console.log(`[+] Live Map Updated: ${latestRecordsArray.length} devices refreshed`);
+        }
+    } catch (err: any) {
+        console.error(`[ERROR] Background Flush Error:`, err.message);
+    }
+}, 2000); // 2000 milliseconds = 2 seconds
+// ==========================================
+
+
 // Hardcode port 5112
 const PORT = 5112;
 
@@ -111,18 +157,9 @@ const server = net.createServer((socket) => {
                     raw_data: rawString.substring(0, 255)
                 };
 
-                console.log(`[+] SUCCESS | IMEI: ${imei} | Lat: ${latitude} | Lon: ${longitude} | Speed: ${speedKmh} km/h`);
-
-                if (supabase) {
-                    const { error } = await supabase.from('gps_data').insert([payload]);
-                    if (error) {
-                        console.error(`[CRITICAL] Database Insert Failed:`, error.message, error.details);
-                    } else {
-                        console.log(`[+] Data securely saved to Supabase!`);
-                    }
-                } else {
-                    console.warn(`[!] Supabase client not initialized. Missing API Keys in environment!`);
-                }
+                // Push to the Memory Queue instead of inserting directly!
+                batchQueue.push(payload);
+                console.log(`[QUEUE] Pushed IMEI: ${imei} to Batch Queue. (Queue size: ${batchQueue.length})`);
 
             } catch (err: any) {
                 console.error(`[ERROR] Failed to process packet:`, err.message);
@@ -153,7 +190,7 @@ const server = net.createServer((socket) => {
 
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`=========================================`);
-    console.log(`🚀 MAXIMUM LOGGING GPS SERVER RUNNING`);
+    console.log(`🚀 SCALABLE GPS SERVER (BATCHING MODE)`);
     console.log(`📡 Listening on Port: ${PORT}`);
     console.log(`=========================================`);
 });
