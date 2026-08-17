@@ -217,23 +217,19 @@ fastify.get('/api/route/:imei', async (request, reply) => {
     if (error) return reply.status(500).send({ error: error.message });
     if (!data || data.length === 0) return reply.status(404).send({ error: 'No route found for this time period' });
     
-    // Auto-convert to a perfect GeoJSON feature collection for Maps
+    // Auto-convert to a GeoJSON LineString for perfectly drawing the route on a map
     const geoJson = {
         type: "FeatureCollection",
-        features: data.map((point: any) => ({
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: [point.longitude, point.latitude] // GeoJSON strict format: [Lon, Lat]
-            },
-            properties: {
-                speed_kmh: point.speed_kmh,
-                course: point.course,
-                ignition: point.ignition_status,
-                battery: point.battery_voltage,
-                timestamp: point.timestamp
+        features: [
+            {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                    type: "LineString",
+                    coordinates: data.map((point: any) => [point.longitude, point.latitude])
+                }
             }
-        }))
+        ]
     };
     
     return geoJson;
