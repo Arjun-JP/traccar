@@ -235,6 +235,41 @@ fastify.get('/api/route/:imei', async (request, reply) => {
     return geoJson;
 });
 
+// Endpoint 3: Get Raw Route History Array
+fastify.get('/api/history/:imei', async (request, reply) => {
+    if (!supabase) return reply.status(500).send({ error: 'Database not configured' });
+    
+    const { imei } = request.params as { imei: string };
+    const { start, end } = request.query as { start?: string, end?: string };
+    
+    if (!start || !end) {
+        return reply.status(400).send({ error: 'Missing start or end query parameters.' });
+    }
+    
+    const { data, error } = await supabase
+        .from('gps_data')
+        .select('*')
+        .eq('imei', imei)
+        .gte('timestamp', start)
+        .lte('timestamp', end)
+        .order('timestamp', { ascending: true });
+        
+    if (error) return reply.status(500).send({ error: error.message });
+    if (!data || data.length === 0) return reply.status(404).send({ error: 'No route found for this time period' });
+    
+    // Map the Supabase SQL results into the exact JSON array format requested
+    const rawHistory = data.map((point: any) => ({
+        latitude: point.latitude,
+        longitude: point.longitude,
+        timestamp: point.timestamp,
+        speed_kmh: point.speed_kmh,
+        course: point.course,
+        ignition_status: point.ignition_status
+    }));
+    
+    return rawHistory;
+});
+
 // Start the HTTP API on Railway's public web port (usually 8080 or dynamically assigned)
 const HTTP_PORT = parseInt(process.env.PORT || '8080', 10);
 fastify.listen({ port: HTTP_PORT, host: '0.0.0.0' }, (err, address) => {
