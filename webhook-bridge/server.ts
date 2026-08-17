@@ -1,6 +1,8 @@
 import * as net from 'net';
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import Fastify from 'fastify';
+import cors from '@fastify/cors';
 
 dotenv.config();
 
@@ -18,7 +20,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABAS
 const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 // ==========================================
-// MEMORY QUEUE FOR BATCHING
+// 1. MEMORY QUEUE FOR BATCHING
 // ==========================================
 let batchQueue: any[] = [];
 
@@ -33,7 +35,7 @@ setInterval(async () => {
     console.log(`\n[BATCH FLUSH] Sending ${recordsToInsert.length} records to Supabase...`);
 
     try {
-        // 1. Bulk Insert ALL historical records to `gps_data`
+        // Bulk Insert ALL historical records to `gps_data`
         const { error: insertErr } = await supabase.from('gps_data').insert(recordsToInsert);
         if (insertErr) {
             console.error(`[CRITICAL] Bulk Insert Failed:`, insertErr.message);
@@ -41,15 +43,14 @@ setInterval(async () => {
             console.log(`[+] Bulk Insert Success: ${recordsToInsert.length} rows`);
         }
 
-        // 2. Extract only the LATEST record for each IMEI for the `gps_latest` map table
+        // Extract only the LATEST record for each IMEI for the `gps_latest` map table
         const latestRecordsMap = new Map();
         for (const record of recordsToInsert) {
-            // Because array is chronological, newer records will overwrite older ones in this Map
             latestRecordsMap.set(record.imei, record);
         }
         const latestRecordsArray = Array.from(latestRecordsMap.values());
 
-        // 3. Bulk Upsert into `gps_latest`
+        // Bulk Upsert into `gps_latest`
         const { error: upsertErr } = await supabase.from('gps_latest').upsert(latestRecordsArray, { onConflict: 'imei' });
         if (upsertErr) {
             console.error(`[CRITICAL] Bulk Upsert Failed:`, upsertErr.message);
@@ -59,12 +60,12 @@ setInterval(async () => {
     } catch (err: any) {
         console.error(`[ERROR] Background Flush Error:`, err.message);
     }
-}, 2000); // 2000 milliseconds = 2 seconds
+}, 2000); 
+
 // ==========================================
-
-
-// Hardcode port 5112
-const PORT = 5112;
+// 2. TCP SOCKET SERVER (RAW GPS DEVICES)
+// ==========================================
+const TCP_PORT = 5112; // Hardcoded because Railway TCP proxy targets this
 
 const server = net.createServer((socket) => {
     try {
@@ -72,29 +73,21 @@ const server = net.createServer((socket) => {
         const clientPort = socket.remotePort || 'UNKNOWN_PORT';
         
         console.log(`\n[+] [${new Date().toISOString()}] New connection established from ${clientIp}:${clientPort}`);
-
-        // Set a timeout so dead connections don't hang open forever (e.g., 5 minutes)
-        socket.setTimeout(300000);
+        socket.setTimeout(300000); // 5 minute timeout
 
         socket.on('data', async (data) => {
             try {
-                // Log the exact raw hex bytes in case it's not ASCII text
-                console.log(`[RAW HEX BUFFER] -->`, data.toString('hex'));
-
                 const rawString = data.toString('ascii');
                 console.log(`[INCOMING ASCII] --> ${rawString.trim()}`);
                 
-                // Send ACK back (Traccar sends a single 0x01 byte)
+                // Send ACK back
                 socket.write(Buffer.from([0x01]));
 
                 // Regex to parse the Cordon / Atlanta Protocol
                 const gprmcRegex = /ATL.*?(\d{15}),\$GPRMC,(\d{2})(\d{2})(\d{2})(?:\.\d+)?,([AV]),(\d+?)(\d{2}\.\d+),([NS]),(\d+?)(\d{2}\.\d+),([EW]),(\d+\.?\d*)?,(\d+\.?\d*)?,(\d{2})(\d{2})(\d{2})(.*)/;
                 const match = rawString.match(gprmcRegex);
 
-                if (!match) {
-                    console.warn(`[-] Could not parse GPS data format. Payload: ${rawString.substring(0, 100)}...`);
-                    return;
-                }
+                if (!match) return;
 
                 const imei = match[1];
                 const hh = match[2];
@@ -114,10 +107,7 @@ const server = net.createServer((socket) => {
                 const year = match[16];
                 const remainder = match[17];
 
-                if (validity !== 'A') {
-                    console.warn(`[!] GPS Fix Invalid (V) for IMEI ${imei}. Device might be indoors or searching for satellites.`);
-                    return;
-                }
+                if (validity !== 'A') return; // Invalid GPS fix
 
                 // Convert to Decimal Degrees
                 let latitude = latDeg + (latMin / 60.0);
@@ -127,14 +117,13 @@ const server = net.createServer((socket) => {
                 if (lonHem === 'W') longitude = -longitude;
 
                 const speedKmh = speedKnots * 1.852;
-                // GPS devices often send local time instead of strict UTC. 
-                // We append +05:30 so Node.js knows this time is exactly IST.
+                
+                // Timezone: IST (+05:30)
                 const timestamp = new Date(`20${year}-${month}-${day}T${hh}:${mm}:${ss}+05:30`).toISOString();
 
-                // Extract IO, Battery, etc from remainder
+                // Extract IO, Battery
                 let ignition_status = false;
                 let battery_voltage = null;
-
                 try {
                     const ioMatch = remainder.match(/#([01]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)/);
                     if (ioMatch) {
@@ -143,9 +132,7 @@ const server = net.createServer((socket) => {
                             battery_voltage = parseFloat(ioMatch[7]);
                         }
                     }
-                } catch (parseErr) {
-                    console.error(`[-] Error parsing I/O and Battery fields:`, parseErr);
-                }
+                } catch (e) {}
 
                 const payload = {
                     imei,
@@ -159,40 +146,106 @@ const server = net.createServer((socket) => {
                     raw_data: rawString.substring(0, 255)
                 };
 
-                // Push to the Memory Queue instead of inserting directly!
                 batchQueue.push(payload);
-                console.log(`[QUEUE] Pushed IMEI: ${imei} to Batch Queue. (Queue size: ${batchQueue.length})`);
 
             } catch (err: any) {
                 console.error(`[ERROR] Failed to process packet:`, err.message);
             }
         });
 
-        socket.on('error', (err: any) => {
-            console.error(`[-] Socket Error from ${clientIp}:`, err.message);
-        });
-
-        socket.on('end', () => {
-            console.log(`[-] Socket End: Connection closed gracefully by ${clientIp}`);
-        });
-
-        socket.on('close', (hadError) => {
-            console.log(`[-] Socket Closed: ${clientIp} (Had Error: ${hadError})`);
-        });
-
-        socket.on('timeout', () => {
-            console.warn(`[!] Socket Timeout: Connection from ${clientIp} was idle for too long. Disconnecting.`);
-            socket.destroy();
-        });
+        socket.on('error', (err: any) => console.error(`[-] Socket Error:`, err.message));
+        socket.on('end', () => {});
+        socket.on('close', () => {});
+        socket.on('timeout', () => socket.destroy());
 
     } catch (serverErr: any) {
         console.error(`[CRITICAL] Error handling new connection:`, serverErr.message);
     }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(TCP_PORT, '0.0.0.0', () => {
     console.log(`=========================================`);
-    console.log(`🚀 SCALABLE GPS SERVER (BATCHING MODE)`);
-    console.log(`📡 Listening on Port: ${PORT}`);
-    console.log(`=========================================`);
+    console.log(`📡 TCP SERVER (GPS TRACKERS) Port: ${TCP_PORT}`);
+});
+
+
+// ==========================================
+// 3. FASTIFY HTTP API (WEB & MOBILE APP)
+// ==========================================
+const fastify = Fastify({ logger: false });
+
+// Enable CORS so the web frontend can call the API securely
+fastify.register(cors, { origin: '*' });
+
+// Endpoint 1: Get Live Location
+fastify.get('/api/live/:imei', async (request, reply) => {
+    if (!supabase) return reply.status(500).send({ error: 'Database not configured' });
+    
+    const { imei } = request.params as { imei: string };
+    
+    const { data, error } = await supabase
+        .from('gps_latest')
+        .select('*')
+        .eq('imei', imei)
+        .single();
+        
+    if (error) return reply.status(500).send({ error: error.message });
+    if (!data) return reply.status(404).send({ error: 'Device not found or has never connected' });
+    
+    return data;
+});
+
+// Endpoint 2: Get Full Route Map (GeoJSON)
+fastify.get('/api/route/:imei', async (request, reply) => {
+    if (!supabase) return reply.status(500).send({ error: 'Database not configured' });
+    
+    const { imei } = request.params as { imei: string };
+    const { start, end } = request.query as { start?: string, end?: string };
+    
+    if (!start || !end) {
+        return reply.status(400).send({ error: 'Missing start or end query parameters. Example: ?start=2025-07-18T00:00:00Z&end=2025-07-18T23:59:59Z' });
+    }
+    
+    const { data, error } = await supabase
+        .from('gps_data')
+        .select('*')
+        .eq('imei', imei)
+        .gte('timestamp', start)
+        .lte('timestamp', end)
+        .order('timestamp', { ascending: true });
+        
+    if (error) return reply.status(500).send({ error: error.message });
+    if (!data || data.length === 0) return reply.status(404).send({ error: 'No route found for this time period' });
+    
+    // Auto-convert to a perfect GeoJSON feature collection for Maps
+    const geoJson = {
+        type: "FeatureCollection",
+        features: data.map((point: any) => ({
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [point.longitude, point.latitude] // GeoJSON strict format: [Lon, Lat]
+            },
+            properties: {
+                speed_kmh: point.speed_kmh,
+                course: point.course,
+                ignition: point.ignition_status,
+                battery: point.battery_voltage,
+                timestamp: point.timestamp
+            }
+        }))
+    };
+    
+    return geoJson;
+});
+
+// Start the HTTP API on Railway's public web port (usually 8080 or dynamically assigned)
+const HTTP_PORT = parseInt(process.env.PORT || '8080', 10);
+fastify.listen({ port: HTTP_PORT, host: '0.0.0.0' }, (err, address) => {
+    if (err) {
+        console.error(`[CRITICAL] HTTP API Server failed:`, err);
+    } else {
+        console.log(`🌐 HTTP API SERVER (FRONTEND)  URL: ${address}`);
+        console.log(`=========================================`);
+    }
 });

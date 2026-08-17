@@ -8,8 +8,9 @@
     "dev": "ts-node-dev server.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.112.3",
-    "dotenv": "^16.6.1",
+    "@fastify/cors": "^9.0.1",
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5",
     "fastify": "^4.28.1"
   },
   "devDependencies": {
