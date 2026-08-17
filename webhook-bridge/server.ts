@@ -127,7 +127,9 @@ const server = net.createServer((socket) => {
                 if (lonHem === 'W') longitude = -longitude;
 
                 const speedKmh = speedKnots * 1.852;
-                const timestamp = new Date(`20${year}-${month}-${day}T${hh}:${mm}:${ss}Z`).toISOString();
+                // GPS devices often send local time instead of strict UTC. 
+                // We append +05:30 so Node.js knows this time is exactly IST.
+                const timestamp = new Date(`20${year}-${month}-${day}T${hh}:${mm}:${ss}+05:30`).toISOString();
 
                 // Extract IO, Battery, etc from remainder
                 let ignition_status = false;
