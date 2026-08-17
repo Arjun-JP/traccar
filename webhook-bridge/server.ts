@@ -235,7 +235,21 @@ fastify.get('/api/route/:imei', async (request, reply) => {
     return geoJson;
 });
 
-// Endpoint 3: Get Raw Route History Array
+// Endpoint 3: Get All Active Devices (Live Map)
+fastify.get('/api/devices', async (request, reply) => {
+    if (!supabase) return reply.status(500).send({ error: 'Database not configured' });
+    
+    // Fetch all rows from gps_latest (exactly 1 row per device).
+    const { data, error } = await supabase
+        .from('gps_latest')
+        .select('*');
+        
+    if (error) return reply.status(500).send({ error: error.message });
+    
+    return data || [];
+});
+
+// Endpoint 4: Get Raw Route History Array
 fastify.get('/api/history/:imei', async (request, reply) => {
     if (!supabase) return reply.status(500).send({ error: 'Database not configured' });
     
