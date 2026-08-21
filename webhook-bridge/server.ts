@@ -22,51 +22,41 @@ const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 // ==========================================
 // 1. MEMORY QUEUE FOR BATCHING
 // ==========================================
-let batchQueueHistory: any[] = [];
-let batchQueueLatest: any[] = [];
+let batchQueue: any[] = [];
 const lastIgnitionState = new Map<string, boolean>();
 
 // This loop runs every 2 seconds to flush data to Supabase
 setInterval(async () => {
-    if (!supabase) return;
+    if (!supabase || batchQueue.length === 0) return;
 
-    // Grab everything currently in the queues and clear them
-    const recordsToInsertHistory = [...batchQueueHistory];
-    batchQueueHistory = [];
+    // Grab everything currently in the queue and clear it
+    const recordsToProcess = [...batchQueue];
+    batchQueue = [];
 
-    const recordsToUpsertLatest = [...batchQueueLatest];
-    batchQueueLatest = [];
-
-    if (recordsToInsertHistory.length === 0 && recordsToUpsertLatest.length === 0) return;
-
-    console.log(`\n[BATCH FLUSH] History: ${recordsToInsertHistory.length} | Latest: ${recordsToUpsertLatest.length}`);
+    console.log(`\n[BATCH FLUSH] Processing ${recordsToProcess.length} filtered records...`);
 
     try {
-        // Bulk Insert ALL historical records to `gps_data`
-        if (recordsToInsertHistory.length > 0) {
-            const { error: insertErr } = await supabase.from('gps_data').insert(recordsToInsertHistory);
-            if (insertErr) {
-                console.error(`[CRITICAL] Bulk Insert Failed:`, insertErr.message);
-            } else {
-                console.log(`[+] Bulk Insert Success: ${recordsToInsertHistory.length} rows`);
-            }
+        // 1. Bulk Insert ALL historical records to `gps_data`
+        const { error: insertErr } = await supabase.from('gps_data').insert(recordsToProcess);
+        if (insertErr) {
+            console.error(`[CRITICAL] Bulk Insert Failed:`, insertErr.message);
+        } else {
+            console.log(`[+] History Saved: ${recordsToProcess.length} rows`);
         }
 
-        // Extract only the LATEST record for each IMEI for the `gps_latest` map table
-        if (recordsToUpsertLatest.length > 0) {
-            const latestRecordsMap = new Map();
-            for (const record of recordsToUpsertLatest) {
-                latestRecordsMap.set(record.imei, record);
-            }
-            const latestRecordsArray = Array.from(latestRecordsMap.values());
+        // 2. Extract only the LATEST record for each IMEI for the `gps_latest` map table
+        const latestRecordsMap = new Map();
+        for (const record of recordsToProcess) {
+            latestRecordsMap.set(record.imei, record);
+        }
+        const latestRecordsArray = Array.from(latestRecordsMap.values());
 
-            // Bulk Upsert into `gps_latest`
-            const { error: upsertErr } = await supabase.from('gps_latest').upsert(latestRecordsArray, { onConflict: 'imei' });
-            if (upsertErr) {
-                console.error(`[CRITICAL] Bulk Upsert Failed:`, upsertErr.message);
-            } else {
-                console.log(`[+] Live Map Updated: ${latestRecordsArray.length} devices refreshed`);
-            }
+        // 3. Bulk Upsert into `gps_latest`
+        const { error: upsertErr } = await supabase.from('gps_latest').upsert(latestRecordsArray, { onConflict: 'imei' });
+        if (upsertErr) {
+            console.error(`[CRITICAL] Bulk Upsert Failed:`, upsertErr.message);
+        } else {
+            console.log(`[+] Live Map Updated: ${latestRecordsArray.length} devices refreshed`);
         }
     } catch (err: any) {
         console.error(`[ERROR] Background Flush Error:`, err.message);
@@ -157,15 +147,12 @@ const server = net.createServer((socket) => {
                     raw_data: rawString.substring(0, 255)
                 };
 
-                // 1. ALWAYS push to the Latest Queue (Live Map stays accurate)
-                batchQueueLatest.push(payload);
-
-                // 2. SMART FILTERING for the History Queue (gps_data)
+                // SMART FILTERING for BOTH History and Live Map
                 const prevIgnition = lastIgnitionState.get(imei);
                 
                 if (ignition_status === true || prevIgnition !== false) {
                     // Save if Ignition is ON, or if it just turned OFF (prev !== false)
-                    batchQueueHistory.push(payload);
+                    batchQueue.push(payload);
                 }
                 
                 // Update memory with current ignition state
