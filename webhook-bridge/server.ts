@@ -64,6 +64,51 @@ setInterval(async () => {
 }, 2000); 
 
 // ==========================================
+// 1.5 BACKGROUND WATCHDOG: STALE DEVICES
+// ==========================================
+// Every 1 minute, force disconnected vehicles (no ping for 5 mins) to ignition OFF
+setInterval(async () => {
+    if (!supabase) return;
+    
+    try {
+        const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+        
+        // Select devices that need to be timed out so we can update our memory map
+        const { data: staleDevices, error: fetchErr } = await supabase
+            .from('gps_latest')
+            .select('imei')
+            .eq('ignition_status', true)
+            .lt('timestamp', fiveMinsAgo);
+            
+        if (fetchErr) {
+            console.error(`[ERROR] Watchdog Fetch Failed:`, fetchErr.message);
+            return;
+        }
+
+        if (staleDevices && staleDevices.length > 0) {
+            // Force them to false in the database
+            const { error: updateErr } = await supabase
+                .from('gps_latest')
+                .update({ ignition_status: false })
+                .in('imei', staleDevices.map(d => d.imei));
+                
+            if (updateErr) {
+                console.error(`[ERROR] Watchdog Update Failed:`, updateErr.message);
+            } else {
+                console.log(`[+] WATCHDOG: Auto-marked ${staleDevices.length} disconnected devices as OFF.`);
+                
+                // Sync internal memory so the next ping doesn't get confused
+                for (const device of staleDevices) {
+                    lastIgnitionState.set(device.imei, false);
+                }
+            }
+        }
+    } catch (e: any) {
+        console.error(`[ERROR] Watchdog Crash:`, e.message);
+    }
+}, 60 * 1000);
+
+// ==========================================
 // 2. TCP SOCKET SERVER (RAW GPS DEVICES)
 // ==========================================
 const TCP_PORT = 5112; // Hardcoded because Railway TCP proxy targets this
